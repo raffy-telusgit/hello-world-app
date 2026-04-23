@@ -4,6 +4,19 @@ metadata:
   name: hello-world-app
 manifests:
   rawYaml:
-    - cloudrun-service.yaml
+    - manifests/dev.yaml
 deploy:
   cloudrun: {}
+profiles:
+  - name: dev
+    manifests:
+      rawYaml:
+        - manifests/dev.yaml
+  - name: staging
+    manifests:
+      rawYaml:
+        - manifests/staging.yaml
+  - name: prod
+    manifests:
+      rawYaml:
+        - manifests/prod.yaml

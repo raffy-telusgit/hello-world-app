@@ -1,0 +1,22 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: hello-world-prod
+spec:
+  template:
+    metadata:
+      annotations:
+        run.googleapis.com/vpc-access-connector: projects/raffy-cicd-lab-bf9b4f/locations/northamerica-northeast1/connectors/hw-vpc-connector
+        run.googleapis.com/vpc-access-egress: all-traffic
+    spec:
+      containers:
+        - image: northamerica-northeast1-docker.pkg.dev/raffy-cicd-lab-bf9b4f/hello-world-app/hello-world-app:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: ENVIRONMENT
+              value: "prod"
+          resources:
+            limits:
+              cpu: "1"
+              memory: 512Mi
