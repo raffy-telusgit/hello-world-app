@@ -1,0 +1,20 @@
+{
+  "name": "hello-world-app",
+  "version": "1.0.0",
+  "description": "Hello World TypeScript Express API deployed via Cloud Deploy",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts"
+  },
+  "dependencies": {
+    "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.0",
+    "typescript": "^5.3.0",
+    "ts-node": "^10.9.0"
+  }
+}

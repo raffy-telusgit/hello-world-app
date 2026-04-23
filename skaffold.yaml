@@ -1,0 +1,32 @@
+apiVersion: skaffold/v4beta7
+kind: Config
+metadata:
+  name: hello-world-app
+build:
+  artifacts:
+    - image: northamerica-northeast1-docker.pkg.dev/raffy-cicd-lab-bf9b4f/hello-world-app/hello-world-app
+      docker:
+        dockerfile: Dockerfile
+  googleCloudBuild:
+    projectId: raffy-cicd-lab-bf9b4f
+    region: northamerica-northeast1
+deploy:
+  cloudrun:
+    projectid: raffy-cicd-lab-bf9b4f
+    region: northamerica-northeast1
+profiles:
+  - name: dev
+    deploy:
+      cloudrun:
+        projectid: raffy-cicd-lab-bf9b4f
+        region: northamerica-northeast1
+  - name: staging
+    deploy:
+      cloudrun:
+        projectid: raffy-cicd-lab-bf9b4f
+        region: northamerica-northeast1
+  - name: prod
+    deploy:
+      cloudrun:
+        projectid: raffy-cicd-lab-bf9b4f
+        region: northamerica-northeast1
