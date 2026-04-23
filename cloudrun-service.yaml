@@ -1,7 +1,7 @@
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
-  name: hello-world-dev
+  name: CLOUD_DEPLOY_customTarget_serviceName
 spec:
   template:
     metadata:
@@ -15,7 +15,7 @@ spec:
             - containerPort: 3000
           env:
             - name: ENVIRONMENT
-              value: "dev"
+              value: CLOUD_DEPLOY_customTarget_environment
           resources:
             limits:
               cpu: "1"
