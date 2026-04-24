@@ -11,7 +11,7 @@ app.get("/", (_req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
-
+//health check endpoint
 app.get("/healthz", (_req, res) => {
   res.status(200).json({ status: "ok" });
 });
