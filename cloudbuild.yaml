@@ -1,0 +1,39 @@
+steps:
+  # Step 1: Build Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - '${_REGISTRY}/${_APP_NAME}:${SHORT_SHA}'
+      - '.'
+
+  # Step 2: Push to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - '${_REGISTRY}/${_APP_NAME}:${SHORT_SHA}'
+
+  # Step 3: Create Cloud Deploy release (auto-deploys to dev)
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'deploy'
+      - 'releases'
+      - 'create'
+      - 'release-${SHORT_SHA}'
+      - '--delivery-pipeline=${_PIPELINE}'
+      - '--region=${_REGION}'
+      - '--images=${_REGISTRY}/${_APP_NAME}=${_REGISTRY}/${_APP_NAME}:${SHORT_SHA}'
+      - '--skaffold-file=skaffold.yaml'
+      - '--source=.'
+
+images:
+  - '${_REGISTRY}/${_APP_NAME}:${SHORT_SHA}'
+
+substitutions:
+  _REGISTRY: 'northamerica-northeast1-docker.pkg.dev/raffy-cicd-lab-bf9b4f/hello-world-app'
+  _APP_NAME: 'hello-world-app'
+  _PIPELINE: 'hello-world-pipeline'
+  _REGION: 'northamerica-northeast1'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
