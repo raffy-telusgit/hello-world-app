@@ -1,0 +1,31 @@
+#!/bin/sh
+# Runs on every manual `git push` from hello-world-app.
+# Blocks the push if format, lint, or type checks fail.
+
+set -e
+cd "$(git rev-parse --show-toplevel)"
+
+if [ ! -d node_modules ]; then
+  echo "[pre-push] ERROR: node_modules missing — run \`npm install\` first." >&2
+  exit 1
+fi
+
+echo "[pre-push] Checking formatting..."
+npm run --silent format:check || {
+  echo "[pre-push] BLOCKED: Prettier found formatting issues. Run \`npm run format\` to fix." >&2
+  exit 1
+}
+
+echo "[pre-push] Running ESLint..."
+npm run --silent lint || {
+  echo "[pre-push] BLOCKED: ESLint found errors. Run \`npm run lint\` to see them." >&2
+  exit 1
+}
+
+echo "[pre-push] Running TypeScript type check..."
+npm run --silent typecheck || {
+  echo "[pre-push] BLOCKED: TypeScript errors found. Run \`npm run typecheck\` to see them." >&2
+  exit 1
+}
+
+echo "[pre-push] All checks passed."
