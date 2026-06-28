@@ -10,7 +10,7 @@ app.get("/", (_req, res) => {
     environment: process.env.ENVIRONMENT || "unknown",
     timestamp: new Date().toISOString(),
   });
-});
+};
 // health check endpoint
 app.get("/healthz", (_req, res) => {
   res.status(200).json({ status: "ok" });
