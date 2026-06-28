@@ -13,7 +13,7 @@ spec:
         - image: northamerica-northeast1-docker.pkg.dev/raffy-cicd-lab-bf9b4f/hello-world-app/hello-world-app:latest
           ports:
             - containerPort: 3000
-        env:
+          env:
             - name: ENVIRONMENT
               value: "prod"
           resources:
