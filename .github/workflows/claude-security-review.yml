@@ -1,0 +1,41 @@
+name: "Claude Security Review"
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+
+jobs:
+  claude-security-review:
+    # Skip draft PRs — only review once a PR is real / ready.
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Read security review prompt
+        id: read_prompt
+        run: |
+          {
+            echo "prompt<<EOF"
+            cat ./security-review.txt
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Run Claude Code security review (via FueliX)
+        uses: anthropics/claude-code-action@v1
+        env:
+          # FueliX exposes an Anthropic-compatible endpoint at /v1/messages.
+          ANTHROPIC_BASE_URL: https://api.fuelix.ai
+          ANTHROPIC_AUTH_TOKEN: ${{ secrets.FUELIX_API_KEY }}
+        with:
+          prompt: ${{ steps.read_prompt.outputs.prompt }}
+          use_sticky_comment: true
+          # Model id must be one FueliX serves (see `GET /v1/models`).
+          claude_args: "--model claude-sonnet-5 --max-turns 20"

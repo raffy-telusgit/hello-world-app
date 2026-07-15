@@ -1,0 +1,12 @@
+Review this pull request as a security-focused code reviewer.
+
+Focus on:
+- Injection risks (SQL, command, template)
+- Auth and access-control mistakes
+- Secrets or credentials committed to the repo
+- Unsafe handling of user input
+- Dependency or supply-chain concerns
+
+For each finding, give the file and line, explain the risk briefly,
+and suggest a concrete fix. If the change is low-risk, say so in one line.
+Don't comment on style or formatting.
