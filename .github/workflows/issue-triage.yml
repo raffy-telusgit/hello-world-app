@@ -1,0 +1,70 @@
+name: Issue Triage Agent
+
+on:
+  issues:
+    types: [labeled]
+
+env:
+  CLOUD_RUN_URL: "https://issue-triage-agent-xxxxxxxxxx-nn.a.run.app"
+
+# NOTE: this org's policy blocks creating Workload Identity Pools
+# (see infra-cloudrun README "Known Issues"), so we can't use WIF here.
+# Auth is via a static key for github-actions-sa, stored as the
+# GCP_SA_KEY repo secret. Rotate this key periodically.
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  triage:
+    name: Triage Issue
+    runs-on: ubuntu-latest
+    if: github.event.label.name == 'needs-triage'
+    steps:
+      - name: Authenticate to GCP
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          token_format: "id_token"
+          id_token_audience: ${{ env.CLOUD_RUN_URL }}
+          id_token_include_email: true
+
+      - name: Call issue-triage-agent
+        id: triage
+        run: |
+          response=$(curl -sS -w "\n%{http_code}" -X POST "${CLOUD_RUN_URL}/triage" \
+            -H "Authorization: Bearer ${{ steps.auth.outputs.id_token }}" \
+            -H "Content-Type: application/json" \
+            --data-binary @- <<EOF
+          {
+            "repo": "${{ github.repository }}",
+            "issue_number": ${{ github.event.issue.number }},
+            "issue_title": $(jq -Rs . <<< "${{ github.event.issue.title }}"),
+            "issue_body": $(jq -Rs . <<< "${{ github.event.issue.body }}"),
+            "github_token": "${{ github.token }}"
+          }
+          EOF
+          )
+          http_code=$(tail -n1 <<< "$response")
+          body=$(sed '$d' <<< "$response")
+          if [ "$http_code" -ne 200 ]; then
+            echo "Cloud Run call failed with $http_code: $body" >&2
+            exit 1
+          fi
+          echo "$body" > response.json
+          jq -r .recommendation response.json > recommendation.md
+
+      - name: Post recommendation as a comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const recommendation = fs.readFileSync('recommendation.md', 'utf8');
+            const body = `### 🤖 Issue Triage Agent\n\n${recommendation}`;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body,
+            });
