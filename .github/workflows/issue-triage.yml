@@ -5,7 +5,7 @@ on:
     types: [labeled]
 
 env:
-  CLOUD_RUN_URL: "https://issue-triage-agent-xxxxxxxxxx-nn.a.run.app"
+  CLOUD_RUN_URL: "https://issue-triage-agent-pffqe7ny2q-nn.a.run.app"
 
 # NOTE: this org's policy blocks creating Workload Identity Pools
 # (see infra-cloudrun README "Known Issues"), so we can't use WIF here.
