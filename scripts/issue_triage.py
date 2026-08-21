@@ -14,7 +14,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 KB_DIR = REPO_ROOT / "kb"
 
 FUELIX_BASE_URL = os.environ.get("FUELIX_BASE_URL", "https://api.fuelix.ai/v1")
-FUELIX_MODEL = os.environ.get("FUELIX_MODEL", "claude-sonnet-4")
+FUELIX_MODEL = os.environ.get("FUELIX_MODEL", "claude-sonnet-5")
 FUELIX_API_KEY = os.environ["FUELIX_API_KEY"]
 GITHUB_TOKEN = os.environ["GITHUB_TOKEN"]
 
