@@ -98,8 +98,8 @@ connection). No new GitHub-to-GCP trust was created for this feature.
 - [x] Relay code merged to `main` — workflow, `cloudbuild-issue-triage.yaml`, `scripts/`, `kb/`
 - [x] `needs-triage` label created on this repo
 - [x] Real FueliX key added to `issue-triage-agent-fuelix-api-key`
-- [ ] GitHub PAT added to `issue-triage-agent-github-token`
-- [ ] First end-to-end test: label an issue, watch the comment land
+- [x] GitHub PAT added to `issue-triage-agent-github-token`
+- [x] First end-to-end test: label an issue, watch the comment land — confirmed on [issue #1](https://github.com/raffy-telusgit/hello-world-app/issues/1), correctly grounded in `database-connection-timeout.md`
 
 ## Reference
 
