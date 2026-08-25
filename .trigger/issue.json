@@ -1,0 +1,6 @@
+{
+  "repo": "raffy-telusgit/hello-world-app",
+  "issue_number": 16,
+  "issue_title": "VPN clients getting ERR_HANDSHAKE_TIMEOUT_408 on reconnect after sleep",
+  "issue_body": "Multiple users report handshake timeouts when the VPN client reconnects after waking from sleep or switching networks. Logs show repeated 408 handshake timeout errors before eventually succeeding."
+}
