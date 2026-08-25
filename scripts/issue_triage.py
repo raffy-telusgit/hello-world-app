@@ -21,8 +21,8 @@ GITHUB_TOKEN = os.environ["GITHUB_TOKEN"]
 
 def load_kb_docs() -> list[dict]:
     return [
-        {"name": path.name, "content": path.read_text(encoding="utf-8")}
-        for path in sorted(KB_DIR.glob("*.md"))
+        {"name": str(path.relative_to(KB_DIR)), "content": path.read_text(encoding="utf-8")}
+        for path in sorted(KB_DIR.rglob("*.md"))
     ]
 
 
