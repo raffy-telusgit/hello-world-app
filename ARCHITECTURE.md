@@ -1,5 +1,19 @@
 # Issue Triage Relay
 
+> **⚠️ Superseded (2026-08-26).** This GitHub Actions + Cloud Build relay has
+> been replaced by an n8n workflow, which now owns the whole pipeline (GitHub
+> trigger, KB lookup, FueliX call, and posting the comment). The workflow file,
+> `cloudbuild-issue-triage.yaml`, and `scripts/issue_triage.py` described below
+> have been deleted from this repo. `kb/*` is unchanged and still in use.
+> The `infra-cloudrun/modules/issue-triage-agent` Cloud Build trigger and its
+> two Secret Manager secrets are currently left provisioned but unused,
+> pending a decision on whether to decommission them.
+>
+> Kept below as a record: the design decisions here (no WIF, no static SA
+> keys, the resource-level-IAM-vs-editor-role gotcha) are constraints of this
+> GCP org, not of the old pipeline shape — they apply to whatever eventually
+> calls FueliX or GCP resources from outside, n8n included.
+
 How a labeled GitHub issue gets a FueliX-backed recommendation posted back as a
 comment, without a single GCP credential ever touching GitHub Actions.
 
